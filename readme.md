@@ -4,13 +4,6 @@ Ditto Destinations is a simple and elegant Flutter app that introduces users to 
 
 ---
 
-## 🚀 Features
-
-- ✨ Smooth, animated intro screen with page indicator
-- 📄 Beautiful UI using Flutter widgets
-- 🗺️ Easily customizable list of holiday venues
-- 🎯 PageView-based onboarding with smooth page indicator
-
 ## 📱 Screenshots
 
 Coming soon...
