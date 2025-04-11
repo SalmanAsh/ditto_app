@@ -6,7 +6,10 @@ Ditto Destinations is a simple and elegant Flutter app that introduces users to 
 
 ## 📱 Screenshots
 
-Coming soon...
+| ![Intro Page 1](/lib/screenshots/intro_page1.png) | ![Intro Page 2](/lib/screenshots/intro_page2.png) | ![Intro Page 3](/lib/screenshots/intro_page3.png) |
+|:--:|:--:|:--:|
+| Intro Screen 1 | Intro Screen 2 | Intro Screen 3 |
+
 
 ---
 
