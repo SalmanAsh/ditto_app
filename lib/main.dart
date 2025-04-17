@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'intro_screens.dart';
 
 void main() {
+  // Make the root of the tree runApp( root )
   runApp(const MyApp());
 }
 

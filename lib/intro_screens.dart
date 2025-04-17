@@ -3,8 +3,6 @@ import 'package:ditto_app/intro/page_2.dart';
 import 'package:ditto_app/intro/page_3.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-// Replace with your actual home screen
 import './home.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -51,17 +49,45 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
           Positioned(
             bottom: 80,
-            left: 0,
+            left: 10,
             right: 0,
             child: Center(
-              child: SmoothPageIndicator(
-                controller: _controller,
-                count: 3,
-                effect: WormEffect(
-                  dotHeight: 12,
-                  dotWidth: 12,
-                  activeDotColor: Colors.blueAccent,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  lastPage ? SizedBox.shrink() : GestureDetector(
+                    onTap: () {
+                      _controller.jumpToPage(2);
+                    },
+                    child: Text(
+                      'skip',
+                      style: TextStyle(fontSize: 15,
+                        color: Colors.white,
+                        ),
+                      )
+                  ),
+                  // Dot indicator
+                  SmoothPageIndicator(
+                    controller: _controller,
+                    count: 3,
+                    effect: WormEffect(
+                      dotHeight: 12,
+                      dotWidth: 12,
+                      activeDotColor: Colors.blueAccent,
+                    ),
+                  ),
+                  lastPage ? SizedBox.shrink() : GestureDetector(
+                    onTap: () {
+                      _controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                    },
+                    child: Text(
+                      'next',
+                      style: TextStyle(fontSize: 15,
+                        color: Colors.white,
+                        ),
+                      )
+                  ),
+                ],
               ),
             ),
           ),

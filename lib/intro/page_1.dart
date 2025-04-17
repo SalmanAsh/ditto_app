@@ -12,7 +12,6 @@ class Page1 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Replace with your own asset image or use an Icon
             const Icon(
               Icons.flash_on,
               size: 100,
@@ -20,7 +19,7 @@ class Page1 extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             const Text(
-              'Welcome to Ditto',
+              'Welcome to DittoDestinations',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -30,7 +29,7 @@ class Page1 extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Your personalized app experience starts here. Let’s get started!',
+              'Your personalized app experience starts here. Let`s get started!',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.white70,

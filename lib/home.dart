@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'destination_detail.dart';
 
-void main() => runApp(const MyApp());
+// void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Holiday Destination Finder',
-      theme: ThemeData(primarySwatch: Colors.teal),
-      home: const HomePage(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Holiday Destination Finder',
+//       theme: ThemeData(primarySwatch: Colors.teal),
+//       home: const HomePage(),
+//     );
+//   }
+// }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,37 +26,56 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, String>> _destinations = [
-    {
-      "name": "Bali",
-      "description": "Tropical paradise with beaches, temples, and culture."
-    },
-    {
-      "name": "Paris",
-      "description": "City of love with iconic landmarks and rich history."
-    },
-    {
-      "name": "Kyoto",
-      "description": "Historic city with temples, gardens, and traditional culture."
-    },
-    {
-      "name": "Cape Town",
-      "description": "Beautiful coastal city with mountains and vineyards."
-    },
-    {
-      "name": "Reykjavik",
-      "description": "Gateway to Iceland’s natural wonders and northern lights."
-    },
-  ];
-
+  List<Map<String, dynamic>> _destinations = [];
   String _searchQuery = '';
+  bool _isLoading = true;
 
-  List<Map<String, String>> get _filteredDestinations {
+  @override
+  void initState() {
+    super.initState();
+    fetchDestinations();
+  }
+
+  Future<void> fetchDestinations() async {
+    const url = 'https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect%3A10.716463143326969%2C48.755151258420966%2C10.835314015356737%2C48.680903341613316&limit=20&apiKey=21e8efa748b04db0800b41321e4c0e0d';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final features = data['features'] as List;
+
+      setState(() {
+        _destinations = features.map<Map<String, dynamic>>((item) {
+          final props = item['properties'];
+          return {
+            'name': props['name'] ?? 'Unknown',
+            'description': props['formatted'] ?? 'No description available',
+            'details': props,
+          };
+        }).toList();
+        _isLoading = false;
+      });
+    } else {
+      setState(() => _isLoading = false);
+      throw Exception('Failed to load data');
+    }
+  }
+
+  List<Map<String, dynamic>> get _filteredDestinations {
     return _destinations.where((destination) {
       final query = _searchQuery.toLowerCase();
-      return destination['name']!.toLowerCase().contains(query) ||
-             destination['description']!.toLowerCase().contains(query);
+      return destination['name'].toLowerCase().contains(query) ||
+             destination['description'].toLowerCase().contains(query);
     }).toList();
+  }
+
+  void _openDetails(Map<String, dynamic> destination) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DestinationDetailPage(details: destination['details']),
+      ),
+    );
   }
 
   @override
@@ -73,20 +95,23 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: _filteredDestinations.isEmpty
-                  ? const Center(child: Text('No destinations found'))
-                  : ListView.builder(
-                      itemCount: _filteredDestinations.length,
-                      itemBuilder: (context, index) {
-                        final destination = _filteredDestinations[index];
-                        return Card(
-                          child: ListTile(
-                            title: Text(destination['name']!),
-                            subtitle: Text(destination['description']!),
-                          ),
-                        );
-                      },
-                    ),
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _filteredDestinations.isEmpty
+                      ? const Center(child: Text('No destinations found'))
+                      : ListView.builder(
+                          itemCount: _filteredDestinations.length,
+                          itemBuilder: (context, index) {
+                            final destination = _filteredDestinations[index];
+                            return Card(
+                              child: ListTile(
+                                title: Text(destination['name']),
+                                subtitle: Text(destination['description']),
+                                onTap: () => _openDetails(destination),
+                              ),
+                            );
+                          },
+                        ),
             ),
           ],
         ),
