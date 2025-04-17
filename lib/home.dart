@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchDestinations() async {
-    const url = 'https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect%3A10.716463143326969%2C48.755151258420966%2C10.835314015356737%2C48.680903341613316&limit=20&apiKey=21e8efa748b04db0800b41321e4c0e0d';
+    const url = '';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
